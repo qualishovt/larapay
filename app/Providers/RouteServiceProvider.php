@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Billing\PaymentGatewayContract;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -47,6 +48,10 @@ class RouteServiceProvider extends ServiceProvider
     {
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        });
+
+        RateLimiter::for('payment', function (Request $request) {
+            return Limit::perDay(1000)->by(app(PaymentGatewayContract::class)->getName());
         });
     }
 }
