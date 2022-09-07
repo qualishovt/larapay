@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\GatewayController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [GatewayController::class, 'gateway1'])->name('gateway.gateway');
+Route::get('/g1', [GatewayController::class, 'gateway1'])->name('gateway.gateway1');
+Route::get('/g2', [GatewayController::class, 'gateway2'])->name('gateway.gateway2');
+
+Route::post('/', [PaymentController::class, 'store'])->name('payment.store')->middleware(['payment.signed', 'throttle:payment']);
